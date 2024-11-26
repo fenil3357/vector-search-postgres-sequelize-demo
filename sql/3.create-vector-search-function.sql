@@ -15,7 +15,7 @@ as $$
     Documents.content,
     1 - (Documents.embeddings <=> query_embeddings) as similarity
   from Documents
-  where (1 - Documents.embeddings <=> query_embeddings) > similarity_threshold
+  where (1 - (Documents.embeddings <=> query_embeddings)) > similarity_threshold
   order by Documents.embeddings <=> query_embeddings
   limit match_count;
 $$;

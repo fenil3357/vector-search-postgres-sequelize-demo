@@ -1,20 +1,17 @@
 import { Document } from "../models/document.js";
-import { openAI } from "../openai.js";
+import { generateEmbeddings, openAI } from "../openai.js";
 
 export const generateEmbeddingsController = async (req, res) => {
   try {
     const { content } = req?.body; // You can pass the embeddings manually in request body if you don't want to use openai
 
     // Generate embeddings of given text content using openAI's text-embedding-ada-002 embedding model
-    const embeddingResponse = await openAI.embeddings.create({
-      input: content,
-      model: 'text-embedding-ada-002'
-    });
+    const embeddings = await generateEmbeddings(content);
 
     // Save embeddings in DB
     const document = await Document.create({
       content,
-      embeddings: embeddingResponse.data[0].embedding
+      embeddings
     }, { raw: true });
 
     return res.json({
